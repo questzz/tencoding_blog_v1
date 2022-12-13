@@ -25,7 +25,7 @@ let index =  {
 		$.ajax({
 			// 회원 가입 요청 
 			type: "POST", 
-			url: "/api/user", 
+			url: "/auth/joinProc", 
 			data: JSON.stringify(data), // http 메세지 body 영역에 들어감
 			contentType: "application/json; charset=utf-8", // 보낼때 데이터 타입 
 			dataType: "json"  // 응답이 왔을 때 MIME TYPE 지정  JSON -->  javascript Object 자동 변환
@@ -39,29 +39,8 @@ let index =  {
 		}).fail(function(error) {
 			alert("회원가입 실패 : " + error.responseJSON.message);
 		});
-	}, 
+	} 
 	
-	login: function() {
-		
-		let data = {
-			username: $("#username").val(), 
-			password: $("#password").val()
-		};
-		
-		$.ajax({
-			type: "POST", 
-			url: "/api/user/login",
-			data: JSON.stringify(data), 
-			contentType: "application/json; charset=utf-8",
-			dataType: "json"	
-		}).done(function(data, textStatus, xhr) {
-			alert("로그인 성공");
-			console.log(data);
-			location.href = "/";
-		}).fail(function(error) {
-			alert("로그인 실패");
-		});
-	}
 }
 
 index.init(); 
