@@ -33,10 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// 1. userDetailsService 들어갈 Object 만들어 주어야 한다. 
 		// 2. passwordEncoder 우리가 사용하는 해시 암호화 함수를 알려 주어야 한다. 
-
 		// 1우리가 커스텀 녀셕을 넣어야 한다. 
 		// 2BCryptPasswordEncoder 사용해서 암호화 하였다.
-		System.out.println("auth>>>>> : " + auth);
 		auth.userDetailsService(principalDetailService).passwordEncoder(encodePWD());
 	}
 	

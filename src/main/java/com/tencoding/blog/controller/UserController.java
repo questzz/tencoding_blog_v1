@@ -22,6 +22,8 @@ public class UserController {
 			return "user/join_form";
 	}
 	
+	
+	
 	// 기존 스프링에서 로그 아웃 처리는 -- 따로 정리 !!!
 //	@GetMapping("/logout")
 //	public String logout(HttpSession httpSession) {
