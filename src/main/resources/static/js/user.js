@@ -8,6 +8,11 @@ let index =  {
 		$("#btn--login").bind("click", () => {
 			this.login();
 		});
+		
+		$("#btn--update").bind("click", () => {
+			this.update();	
+		});
+		
 	}, 
 	
 	save: function() {
@@ -39,6 +44,33 @@ let index =  {
 		}).fail(function(error) {
 			alert("회원가입 실패 : " + error.responseJSON.message);
 		});
+	}, 
+	update: function() {
+		let data = {
+			id : $("#id").val(), 
+			password : $("#password").val(), 
+			email : $("#email").val(), 
+			username : $("#username").val()
+		};
+		
+		// 방어적 코드 ....
+		 
+		$.ajax({
+			type: "PUT", 
+			url : "/api/user", 
+			data: JSON.stringify(data), 
+			contentType: "application/json; charset=utf-8", 
+			dataType: "json"
+		}).done(function(data, textStatus, xhr) {
+			if(data.status == "OK") {
+				alert("회원 정보 수정을 완료 하였습니다");
+				location.href = "/";
+			}
+			
+		}).fail(function(error) {
+			alert("회원 정보 수정에 실패 하였습니다")
+		} );
+		
 	} 
 	
 }

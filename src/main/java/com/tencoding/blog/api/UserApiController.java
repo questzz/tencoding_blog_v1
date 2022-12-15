@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,16 @@ public class UserApiController {
 		int result = userService.saveUser(user);
 		return new ResponseDto<Integer>(HttpStatus.OK, result);  // 자바 OBJECT --> JSON 형식으로   
 	}
+	
+	@PutMapping("/api/user")
+	public ResponseDto<?> update(@RequestBody User user) {
+		
+		// validation 처리 .. 예외 잡아서 사용자한테 떨궈 주면 됨 !!! 
+		System.out.println("user :" + user);
+		userService.saveUser(user);
+		return new ResponseDto<Integer>(HttpStatus.OK, 1);
+	}
+	
 	
 //	@PostMapping("/user/login")
 //	public ResponseDto<?> login(@RequestBody User user) {

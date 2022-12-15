@@ -47,6 +47,22 @@ public class UserService {
 		return -1; 
 	}
 	
+	@Transactional
+	public void updateUser(User reqUser) {
+		User userEntity = userRepository.findById(reqUser.getId())
+				.orElseThrow(() -> {
+					return new IllegalArgumentException("해당 유저를 찾을 수 없습니다");
+				});
+		String rawPassword = reqUser.getPassword();
+		String encPassword = encoder.encode(rawPassword);
+		
+		userEntity.setUsername(reqUser.getUsername());
+		userEntity.setPassword(encPassword);
+		userEntity.setEmail(reqUser.getEmail());
+		// 더티 체킹 업데이트 시킬 예정 
+	}
+	
+	
 //	public User login(User user) {
 //		// 기본 Repository에 필요한 함수가 없을 경우 직접 생성하면 된다. 
 //		//userRepository.get
