@@ -27,8 +27,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private PrincipalDetailService principalDetailService;
 	
+	/**
+	 *  회원 정보 수정시에 Authentication 객체를 생성하기 위해 
+	 *  AuthenticationManager 매니저가 필요하다 이 시점에 Ioc 처리 
+	 */
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 	
-	
+		
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// 1. userDetailsService 들어갈 Object 만들어 주어야 한다. 
