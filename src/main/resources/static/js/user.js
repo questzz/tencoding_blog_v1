@@ -16,19 +16,21 @@ let index =  {
 	}, 
 	
 	save: function() {
-		// form 태그 사용자가 입력한 값을 가지고 오기 --> 자바스크립트 변수로 
+		let token = $("meta[name='_csrf']").attr("content");
+		let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+		console.log("token 확인 : " + token);
+		console.log("csrfHeader 확인 : " + csrfHeader);
+		 
 		let data = {
 			username: $("#username").val(), 
 			password: $("#password").val(),
 			email: $("#email").val()
 		}
-		// console.log(data);
-		// todo -> ajax 로 통신 ( data -> json 변환 자바 서버로 전송 )
 		
-		// ajax 통신 구현 
-		//$.ajax().done().fail();
 		$.ajax({
-			// 회원 가입 요청 
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(csrfHeader , token)
+			},
 			type: "POST", 
 			url: "/auth/joinProc", 
 			data: JSON.stringify(data), // http 메세지 body 영역에 들어감
@@ -46,6 +48,10 @@ let index =  {
 		});
 	}, 
 	update: function() {
+		
+		let token = $("meta[name='_csrf']").attr("content");
+		let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+		
 		let data = {
 			id : $("#id").val(), 
 			password : $("#password").val(), 
@@ -54,8 +60,10 @@ let index =  {
 		};
 		
 		// 방어적 코드 ....
-		 
 		$.ajax({
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(csrfHeader , token)
+			},
 			type: "PUT", 
 			url : "/api/user", 
 			data: JSON.stringify(data), 
@@ -66,13 +74,10 @@ let index =  {
 				alert("회원 정보 수정을 완료 하였습니다");
 				location.href = "/";
 			}
-			
 		}).fail(function(error) {
 			alert("회원 정보 수정에 실패 하였습니다")
 		} );
-		
 	} 
-	
 }
 
 index.init(); 

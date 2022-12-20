@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tencoding.blog.auth.PrincipalDetail;
 import com.tencoding.blog.dto.Board;
+import com.tencoding.blog.dto.Reply;
 import com.tencoding.blog.dto.ResponseDto;
 import com.tencoding.blog.service.BoardService;
 
@@ -43,4 +44,27 @@ public class BoardApiController {
 		int result = boardService.modifyBoard(boardId, board); 
 		return new ResponseDto<Integer>(HttpStatus.OK, result);
 	}
+	
+	@PostMapping("/api/board/{boardId}/reply")
+	public ResponseDto<Integer> replySave(@PathVariable int boardId, 
+			@RequestBody Reply requestReply, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+		boardService.writeReply(boardId, requestReply, principalDetail.getUser());
+		return new ResponseDto<Integer>(HttpStatus.OK, 1);
+	}
+	
+
+	@DeleteMapping("/api/board/{boardId}/reply/{replyId}")
+	public ResponseDto<?> deleteReplyById(@PathVariable String boardId,
+			@PathVariable int replyId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+		
+		try {
+			boardService.deleteReplyById(replyId, principalDetail.getUser().getId());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return new ResponseDto<Integer>(HttpStatus.OK, 1); 
+	}
+	
+	
 }

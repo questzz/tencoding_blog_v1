@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.tencoding.blog.auth.PrincipalDetailService;
 
@@ -17,13 +18,11 @@ import com.tencoding.blog.auth.PrincipalDetailService;
 @EnableWebSecurity // 시큐리티 필터로 등록이 된다(필터 커스텀) 
 @EnableGlobalMethodSecurity(prePostEnabled = true) // 특정 주소로 접근하면 권한 및 인증 처리를 미리 체크 하겠다. 
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
 	// IOC 관리하고 싶어서 여기서 선언 
 	@Bean
 	public BCryptPasswordEncoder encodePWD() {
 		return new BCryptPasswordEncoder();
 	}
-	
 	@Autowired
 	private PrincipalDetailService principalDetailService;
 	
@@ -36,7 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
 		
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,17 +45,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(principalDetailService).passwordEncoder(encodePWD());
 	}
 	
-	
-	
-	
-	// /auth/login_form, auth/join_form   --> /auth/**
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-		http.csrf().disable();  // 개발 완료전 테스트 시 사용(실 서비스 시 풀어 사용 안함 권장) 
-		http
+		// csrf 토큰 발급 요청 - 첫 페이지 랜더링 시 쿠키에 JSESSIONID 와 함께  XSRF-TOKEN
+		// 이름으로 토큰 값을 발급해 준다. 
+		http.
+			csrf()
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+			.and()
 			.authorizeHttpRequests()
-				.antMatchers("/auth/**", "/" , "/js/**", "/image/**", "/css/**")
+				.antMatchers("/auth/**", "/" , "/js/**", "/image/**", "/css/**", "/test/**")
 				.permitAll()
 				.anyRequest()
 				.authenticated()

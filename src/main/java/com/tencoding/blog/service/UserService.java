@@ -41,6 +41,7 @@ public class UserService {
 			userRepository.save(user);
 			return 1; 
 		} catch (Exception e) {
+			System.out.println("saveUser 에러 발생");
 			e.printStackTrace();
 		}
 		return -1; 
@@ -52,13 +53,23 @@ public class UserService {
 				.orElseThrow(() -> {
 					return new IllegalArgumentException("해당 유저를 찾을 수 없습니다");
 				});
-		String rawPassword = reqUser.getPassword();
-		String encPassword = encoder.encode(rawPassword);
 		
-		userEntity.setUsername(reqUser.getUsername());
-		userEntity.setPassword(encPassword);
-		userEntity.setEmail(reqUser.getEmail());
-		// 더티 체킹 업데이트 시킬 예정 
+		if(userEntity.getOauth() == null || userEntity.getOauth().equals("")) {
+			// 우리 사이트 회원 가입자 
+			String rawPassword = reqUser.getPassword();
+			String encPassword = encoder.encode(rawPassword);
+			userEntity.setUsername(reqUser.getUsername());
+			userEntity.setPassword(encPassword);
+			userEntity.setEmail(reqUser.getEmail());
+			// 더티 체킹 업데이트 시킬 예정 
+		}
+	}
+	
+	@Transactional
+	public User searchUserName(String username) {
+		return userRepository.findByUsername(username).orElseGet(() -> {
+			return new User(); 
+		});
 	}
 	
 	

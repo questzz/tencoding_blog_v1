@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GeneratorType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,20 +30,18 @@ public class Reply {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id; 
-	
 	@Column(nullable = false, length = 200)
 	private String content; 
-	
 	// board 연관 관계 처리
-	
 	@ManyToOne
-	
 	@JoinColumn(name = "boardId")
+	@JsonIgnoreProperties({"replys", "userId"})
 	private Board board; 
 	
 	// user 연관 관계 처리 
 	@ManyToOne // Reply  <---> User () 
 	@JoinColumn(name = "userId")
+	@JsonIgnoreProperties({"password", "role", "email", "oauth"})
 	private User user; 
 	
 	@CreationTimestamp
